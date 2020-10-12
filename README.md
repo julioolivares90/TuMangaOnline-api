@@ -9,7 +9,7 @@
 ## :rocket:  tumangaonline-api API enlace
 https://tumangaonline-api.herokuapp.com/
 
-### Start Server using go
+### iniciar el servidor usando go
 
 ```
 go run App.go
