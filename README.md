@@ -1183,7 +1183,7 @@ https://tumangaonline-api.herokuapp.com/api/v1/manga/paginas?lectorTMO=https://l
     ]
 }
 ```
-### realizar una lista de un manga
+### realizar una busqueda de un manga
 ### listado de parametros 
 - title
 - _page
