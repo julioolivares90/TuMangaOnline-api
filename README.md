@@ -1344,4 +1344,16 @@ https://tumangaonline-api.herokuapp.com/api/v1/manga/library?title=naruto
     ]
 }
 ```
+---
+
+
+
+### **:robot: Author**
+
+_*Julio Olivares*_
+
+> You can follow me on
+[github](https://github.com/julioolivares90)&nbsp;&middot;&nbsp;[twitter](https://twitter.com/JulioOlivares12)
+
+---
 
