@@ -1183,4 +1183,165 @@ https://tumangaonline-api.herokuapp.com/api/v1/manga/paginas?lectorTMO=https://l
     ]
 }
 ```
+### realizar una lista de un manga
+### listado de parametros 
+- title
+- _page
+- orderItem
+- orderDir
+- filter_by
+- Type
+- demography
+- status
+- translation_status
+- webcomic
+- yonkoma
+- amateur
+- erotic
+
+## enlace 
+https://tumangaonline-api.herokuapp.com/api/v1/manga/library?title=naruto
+```json
+{
+    "statusCode": 200,
+    "data": [
+        {
+            "title": "Naruto",
+            "score": "8.50",
+            "type": "MANGA",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/manga/150/naruto",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5ed5b1dfc26c3.jpg"
+        },
+        {
+            "title": "Boruto: Naruto Next Generations",
+            "score": "6.92",
+            "type": "MANGA",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/manga/15772/boruto",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5f3ef9435be6c.jpg"
+        },
+        {
+            "title": "Joke Box 7 Naruto Fanbook-Kakashi x Iruka",
+            "score": "0.00",
+            "type": "DOUJINSHI",
+            "demography": "Shoujo",
+            "mangaUrl": "https://lectortmo.com/library/doujinshi/40948/joke-box-7-naruto-fanbook-kakashi-x-iruka",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5ba4189b74e65.jpg"
+        },
+        {
+            "title": "Naruto - Watashi no Kareshi wa Keikokubijin (Doujinshi)",
+            "score": "0.00",
+            "type": "DOUJINSHI",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/doujinshi/46640/naruto-watashi-no-kareshi-wa-keikokubijin-doujinshi",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5db834ffccd43.jpg"
+        },
+        {
+            "title": "Naruto Gaiden: Nanadaime Hokage to Akairo no Hanatsuzuki",
+            "score": "8.69",
+            "type": "MANGA",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/manga/11344/naruto-gaiden-nanadaime-hokage-to-akairo-no-hanatsuzuki",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5edb2d0bc3bb2.jpg"
+        },
+        {
+            "title": "Naruto Color",
+            "score": "10.00",
+            "type": "MANGA",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/manga/48176/naruto-color",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5e40d9a4efc46.jpg"
+        },
+        {
+            "title": "Boruto ~Naruto The Movie~ Special Gaiden",
+            "score": "8.51",
+            "type": "MANGA",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/manga/12855/Boruto-Naruto-The-Movie-Specia",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/12855_TMOmanga013644.jpg"
+        },
+        {
+            "title": "Naruto Especial: Boruto Road to B",
+            "score": "8.35",
+            "type": "ONE SHOT",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/one_shot/12697/Naruto-Especial-Boruto-Road-to",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/12697_TMOmanga043300.jpg"
+        },
+        {
+            "title": "Naruto: The Path Lit by the Full Moon",
+            "score": "8.29",
+            "type": "ONE SHOT",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/one_shot/15552/naruto-gaiden-michita-tsuki-ga-terasu-michi",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/15552_TMOManga5719e0cca25b9.jpg"
+        },
+        {
+            "title": "Naruto (Piloto)",
+            "score": "7.99",
+            "type": "ONE SHOT",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/one_shot/31871/Naruto-Piloto",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5f46aa3cb4e9c.jpg"
+        },
+        {
+            "title": "Naruto- festival de verano",
+            "score": "0.00",
+            "type": "DOUJINSHI",
+            "demography": "Shoujo",
+            "mangaUrl": "https://lectortmo.com/library/doujinshi/52147/naruto-festival-de-verano",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5f23b7fbea104.jpg"
+        },
+        {
+            "title": "Naruto: The Path Lit by the Full Moon",
+            "score": "8.71",
+            "type": "ONE SHOT",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/one_shot/12844/Naruto-ga-Hokage-ni-Natta-Hi",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/12844_TMOmanga024024.jpg"
+        },
+        {
+            "title": "In a Different World with the Naruto System",
+            "score": "0.00",
+            "type": "NOVELA",
+            "demography": "Seinen",
+            "mangaUrl": "https://lectortmo.com/library/novel/41779/in-a-different-world-with-the-naruto-system",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5c027a1806966.jpg"
+        },
+        {
+            "title": "Naruto parodia",
+            "score": "5.46",
+            "type": "MANGA",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/manga/12081/Naruto-parodia",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/12081_TMOmanga094331.jpg"
+        },
+        {
+            "title": "NARUTO GAIDEN NUEVO CICLO",
+            "score": "5.59",
+            "type": "DOUJINSHI",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/doujinshi/19625/NARUTO-GAIDEN-NUEVO-CICLO",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/19625_TMOManga57c76213ecc34.jpg"
+        },
+        {
+            "title": "Naruto ND",
+            "score": "6.75",
+            "type": "DOUJINSHI",
+            "demography": "Shounen",
+            "mangaUrl": "https://lectortmo.com/library/doujinshi/16018/Naruto-ND",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/16018_TMOManga5737cbea47cd2.jpg"
+        },
+        {
+            "title": "Naruto-sazanka",
+            "score": "0.00",
+            "type": "DOUJINSHI",
+            "demography": "Shoujo",
+            "mangaUrl": "https://lectortmo.com/library/doujinshi/52754/naruto-sazanka",
+            "mangaImagen": "https://otakuteca.com/images/books/cover/5f40eaa6178fb.jpg"
+        }
+    ]
+}
+```
 
