@@ -1,12 +1,12 @@
 # TuMangaOnline-api 
 
-## **:package: Main tools used**
+## **:package: Principales herramientas usadas**
 
 - [x] fiber
 - [x] go colly
 
 
-## :rocket: Custom tumangaonline-api API Link
+## :rocket:  tumangaonline-api API enlace
 https://tumangaonline-api.herokuapp.com/
 
 ### Start Server using go
@@ -15,7 +15,7 @@ https://tumangaonline-api.herokuapp.com/
 go run App.go
 ```
 
-### Request & Response Examples
+### Request & Response Ejemplos de uso
 
 ### obtiene todos los mangas populares
 https://tumangaonline-api.herokuapp.com/api/v1/manga/populares
