@@ -1154,7 +1154,7 @@ https://tumangaonline-api.herokuapp.com/api/v1/manga/info?mangaUrl=https://lecto
 }
 ```
 ### obtener las imagenes de un capitulo de un manga
-https://tumangaonline-api.herokuapp.com/api/v1/manga/paginas?lectorTMO=https://lectortmo.com/view_uploads/569910
+https://tumangaonline-api.herokuapp.com/api/v1/get-manga?urlPage=https://lectortmo.com/view_uploads/569910
 ```json
 {
     "statusCode": 200,
