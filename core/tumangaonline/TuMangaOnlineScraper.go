@@ -2,12 +2,11 @@ package tumangaonline
 
 import (
 	"fmt"
-	"log"
+
+	"net/http"
 	"strings"
 
 	s "strings"
-
-	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
@@ -40,6 +39,8 @@ func GetMangasPopulares(pageNumber int) []models.MangaTMO {
 	c.Visit(fmt.Sprintf("%s/populars?page=%d", url, pageNumber))
 	return mangasPopulares
 }
+
+//GetMangasPopularesJosei
 func GetMangasPopularesJosei() []models.MangaTMO {
 	var mangasPopulares []models.MangaTMO
 	url := utilities.TUMANGAONLINE_BASE_URL
@@ -64,6 +65,8 @@ func GetMangasPopularesJosei() []models.MangaTMO {
 	c.Visit(fmt.Sprintf("%s/populars-girls", url))
 	return mangasPopulares
 }
+
+//GetMangasPopularesSeinen
 func GetMangasPopularesSeinen() []models.MangaTMO {
 	var mangasPopulares []models.MangaTMO
 	url := utilities.TUMANGAONLINE_BASE_URL
@@ -167,122 +170,6 @@ func getImagenListaManga(imagenUrl string, mangaIdentificador string) string {
 
 }
 
-//GetPaginasManga obtiene la lista de las imagenes de una pagina
-func GetPaginasManga(urlLector string) []string {
-
-	var paginas []string
-
-	if strings.Contains(urlLector, "anitoc.com") {
-		fmt.Println(urlLector)
-
-	} else if strings.Contains(urlLector, "lectortmo.com") {
-		fmt.Println(urlLector)
-		newUrl := AdapterStringUrl(urlLector)
-		DataSRC := getDataSRC(newUrl)
-		fmt.Println("DataSRC => ", DataSRC)
-		newUrl2 := fmt.Sprintf("https://lectortmo.com/viewer/%s/cascade", DataSRC)
-		fmt.Println(newUrl2)
-		paginas = GetPaginasManga3(newUrl2)
-	} else if strings.Contains(urlLector, "worldmangas.com") {
-		fmt.Println(urlLector)
-	}
-	//nuevaUrl := getDataSRC(urlLector)
-	//fmt.Println("Nueva URL", nuevaUrl)
-	//paginas = GetPaginasManga3(nuevaUrl)
-	return paginas
-}
-
-//recibe una url y retorna el  SRC de la pagina
-//SRC es el codigo que tiene cada manga para poder usar el visor de la pagina
-func getDataSRC(url string) string {
-	//scraper := Scraper.
-	//c := scraper
-	c := colly.NewCollector()
-	var urlVisitar string
-	var SRC string
-	c.OnHTML("#app > div.pbl.pbl_top.text-center.col-12.col-md-8.offset-md-2 > div", func(element *colly.HTMLElement) {
-		urlVisitar = element.Attr("data-src")
-		SRC = urlVisitar[29:]
-		fmt.Println(element.Text)
-		fmt.Println("SRC => ", SRC)
-		fmt.Println("URL A VISITAR", urlVisitar)
-	})
-	c.OnRequest(func(r *colly.Request) {
-
-	})
-	c.OnResponse(func(r *colly.Response) {
-		fmt.Println("Codigo  =>", r.StatusCode)
-	})
-	c.Visit(url)
-	return strings.Replace(SRC, "/paginated", "", -1)
-}
-
-func GetPaginasManga3(url string) []string {
-	var paginas []string
-
-	c := colly.NewCollector()
-	c.OnHTML("#app > #main-container", func(element *colly.HTMLElement) {
-		fmt.Println(element.Text)
-		element.ForEach("div.img-container", func(i int, element *colly.HTMLElement) {
-			pagina := element.ChildAttr("img", "data-src")
-			fmt.Println(pagina)
-			paginas = append(paginas, pagina)
-		})
-	})
-
-	c.Visit(url)
-	return paginas
-}
-func GetPaginasManga2(url string) []string {
-	c := colly.NewCollector()
-	var paginas []string
-	//"#viewer-pages-select"
-	//select[id=viewer-pages-select]
-	c.OnHTML(`#app > div.container > div.row > div.col-12:nth-child(1) > select`, func(element *colly.HTMLElement) {
-
-		if element.Index == 0 {
-			element.ForEach("option", func(i int, element *colly.HTMLElement) {
-				fmt.Println(fmt.Sprintf("%s/%s", url, element.Attr("value")))
-				//fmt.Println(getImagenPagina(fmt.Sprintf("%s/%s", nuevaUrl, element.Attr("value"))))
-				urlImagen := getImagenPagina(fmt.Sprintf("%s/%s", url, element.Attr("value")))
-				paginas = append(paginas, urlImagen)
-			})
-		} else {
-			return
-		}
-	})
-
-	c.Visit(url)
-	return paginas
-}
-
-//obtiene la imagen de una pagina
-func getImagenPagina(url string) string {
-	c := colly.NewCollector()
-	var imagen string
-
-	c.OnHTML("#main-container > div > img", func(element *colly.HTMLElement) {
-		imagen = element.Attr("src")
-		time.Sleep(2 * time.Second)
-	})
-	fmt.Println(imagen)
-	c.Visit(url)
-	return imagen
-}
-
-func getImagenPagina2(url string) string {
-	//var imagen string
-	doc, err := goquery.NewDocument(url)
-	if err != nil {
-		log.Fatal(err)
-	}
-	imagen, exists := doc.Find("#main-container > div > img").Attr("src")
-	if exists {
-		return imagen
-	}
-	return imagen
-}
-
 //https://lectormanga.com/library?title=&order_field=title&order_item=likes_count&order_dir=desc&type=&demography=seinen&webcomic=&yonkoma=&amateur=&erotic=true
 //https://lectortmo.com/library?title=&order_field=title&order_item=likes_count&order_dir=desc&type=&demography=seinen&webcomic=&yonkoma=&amateur=&erotic=true
 //https://lectortmo.com/library?order_item=likes_count&order_dir=desc&title=&_page=1&filter_by=title&type=&demography=&status=&translation_status=&webcomic=&yonkoma=&amateur=&erotic=
@@ -347,4 +234,160 @@ func GetLibraryMangas() []models.ListaManga {
 	})
 	c.Visit("https://lectortmo.com/lists")
 	return lista
+}
+
+func GetCookiesFromTMO() (map[string]string, error) {
+	cookies := make(map[string]string)
+	response, err := http.Get("https://lectortmo.com/")
+
+	if err != nil {
+		return cookies, err
+	}
+
+	cookiesResp := response.Cookies()
+
+	for _, cookie := range cookiesResp {
+		cookies[cookie.Name] = cookie.Value
+	}
+
+	return cookies, nil
+
+}
+
+func GetImageChapter(url string) ([]string, error) {
+	var images []string
+	page, err := GetPageFromTMO(url)
+	if err != nil {
+		return images, err
+	}
+
+	//document, err := goquery.NewDocumentFromReader(page.Body)
+
+	defer page.Body.Close()
+
+	if err != nil {
+		return images, err
+	}
+
+	if strings.Contains(page.Request.URL.String(), "/paginated") {
+
+		fmt.Println(page.Request.URL.String())
+
+		fmt.Println("Obteniendo nueva pagina con vista de cascade")
+
+		oldUrl := page.Request.URL.String()
+
+		newUrl := strings.Replace(oldUrl, "/paginated", "/cascade", 1)
+
+		newPage, err := GetPageFromTMO(newUrl)
+
+		if err != nil {
+			return images, err
+		}
+
+		document, err := goquery.NewDocumentFromReader(newPage.Body)
+
+		if err != nil {
+			return images, err
+		}
+
+		defer newPage.Body.Close()
+
+		doc := document.Find("#app").First()
+		images = getImagesFromHTMLParsed(doc)
+
+	} else if strings.Contains(page.Request.URL.String(), "/cascade") {
+		fmt.Println("Obteniendo imagenes")
+		url := page.Request.URL.String()
+		newPage, err := GetPageFromTMO(url)
+		if err != nil {
+			return images, err
+		}
+
+		document, err := goquery.NewDocumentFromReader(newPage.Body)
+
+		if err != nil {
+			return images, err
+		}
+
+		defer newPage.Body.Close()
+
+		doc := document.Find("#app").First()
+		images = getImagesFromHTMLParsed(doc)
+	}
+
+	return images, nil
+}
+
+func getImagesFromHTMLParsed(document *goquery.Selection) []string {
+	var images []string
+
+	viewContainer := document.Find("#app > viewer-container").First()
+	if viewContainer != nil {
+		viewContainer.Find("viewer-image-container").Each(func(i int, imagen *goquery.Selection) {
+			img := imagen.Find("img").First().AttrOr("data-src", "")
+			if img != "" {
+				images = append(images, img)
+			}
+		})
+	}
+	mainContainer := document.Find("#app > #main-container").First()
+	if mainContainer != nil {
+		mainContainer.Find("div.img-container").Each(func(i int, imagen *goquery.Selection) {
+			img := imagen.Find("img").First().AttrOr("data-src", "")
+			if img != "" {
+				images = append(images, img)
+			}
+		})
+	}
+	return images
+}
+
+//GetPageFromTMO get the page that contains the list of images of a manga
+//parameter url
+//exple GetPageFromTMO("https://lectortmo.com/view_uploads/490456")
+func GetPageFromTMO(url string) (http.Response, error) {
+	//var data []byte
+	data := http.Response{}
+	client := &http.Client{}
+
+	request, err := http.NewRequest("GET", url, nil)
+
+	if err != nil {
+		return data, err
+	}
+	cookies, errCookie := GetCookiesFromTMO()
+
+	if errCookie != nil {
+		return data, errCookie
+	}
+
+	cookieSession := cookies["tumangaonline_session"]
+	cookieXSRF_TOKEN := cookies["XSRF-TOKEN"]
+	cookie__cfduid := cookies["__cfduid"]
+	cookie1 := http.Cookie{Name: "tumangaonline_session", Value: cookieSession}
+	cookie2 := http.Cookie{Name: "XSRF-TOKEN", Value: cookieXSRF_TOKEN}
+	cookie3 := http.Cookie{Name: "__cfduid", Value: cookie__cfduid}
+	request.AddCookie(&cookie1)
+	request.AddCookie(&cookie2)
+	request.AddCookie(&cookie3)
+
+	response, err := client.Do(request)
+
+	if err != nil {
+		return data, err
+	}
+
+	//defer response.Body.Close()
+
+	/*
+		bodyResponse, err := ioutil.ReadAll(response.Body)
+
+		if err != nil {
+			return data, err
+		}
+	*/
+	data = *response
+	//fmt.Println("DATA => GetPageFromTMO", data)
+	return data, nil
 }

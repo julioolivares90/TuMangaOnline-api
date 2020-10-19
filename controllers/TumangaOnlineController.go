@@ -11,6 +11,7 @@ import (
 	"github.com/julioolivares90/TumangaOnlineApi/models"
 )
 
+///GetMangasPopularesWithPagination
 func GetMangasPopularesWithPagination(c *fiber.Ctx) {
 	param := c.Params("pageNumber")
 	id, err := strconv.Atoi(param)
@@ -97,34 +98,6 @@ func GetInfoManga(c *fiber.Ctx) {
 	c.JSON(response)
 }
 
-func GetPaginasManga(c *fiber.Ctx) {
-	urlView := c.Query("lectorTMO")
-
-	if s.Compare(urlView, "") == -1 {
-		response := models.Response{
-			StatusCode: http.StatusBadRequest,
-			Data:       "el parametro no puede estar vacio",
-		}
-		c.JSON(response)
-	}
-	mangas := tumangaonline.GetPaginasManga(urlView)
-
-	response := models.Response{
-		StatusCode: http.StatusOK,
-		Data:       mangas,
-	}
-
-	c.JSON(response)
-}
-
-func GetPaginasInfo(c *fiber.Ctx) {
-	urlView := c.Query("lectorTMO")
-
-	mangas := tumangaonline.GetPaginasManga3(urlView)
-
-	c.JSON(mangas)
-}
-
 func GetInfoLibrary(c *fiber.Ctx) {
 	title := c.Query("title")
 	_page := c.Query("_page")
@@ -182,4 +155,55 @@ func GetListasMangas(c *fiber.Ctx) {
 	}
 
 	c.JSON(response)
+}
+
+func GetCookiesFromTMO(c *fiber.Ctx) {
+	cookies, err := tumangaonline.GetCookiesFromTMO()
+
+	if err != nil {
+		response := models.Response{
+			StatusCode: http.StatusBadGateway,
+			Data:       err.Error(),
+		}
+		c.JSON(response)
+	}
+	response := models.Response{
+		StatusCode: http.StatusOK,
+		Data:       cookies,
+	}
+	c.JSON(response)
+}
+
+func GetPageFromTMOWithCookie(c *fiber.Ctx) {
+
+	url := c.Query("urlPage")
+
+	if url == "" {
+		response := models.Response{
+			StatusCode: http.StatusBadRequest,
+			Data:       "el parametro urlPage es requerido",
+		}
+		c.JSON(response)
+	}
+	pages, err := tumangaonline.GetImageChapter(url)
+	if err != nil {
+		response := models.Response{
+			StatusCode: http.StatusBadRequest,
+			Data:       "No se encontraron datos para mostrar",
+		}
+		c.JSON(response)
+	}
+	if len(pages) < 0 {
+		response := models.Response{
+			StatusCode: http.StatusBadRequest,
+			Data:       "No se encontraron datos para mostrar",
+		}
+		c.JSON(response)
+	}
+	reponse := models.Response{
+		StatusCode: http.StatusOK,
+		Data:       pages,
+	}
+	c.JSON(reponse)
+
 }
