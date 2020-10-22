@@ -1,10 +1,9 @@
 package main
 
 import (
-	"os"
-
 	"github.com/gofiber/fiber"
 	"github.com/julioolivares90/TumangaOnlineApi/controllers"
+	"os"
 )
 
 func main() {
