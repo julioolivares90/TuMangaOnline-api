@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 	"github.com/julioolivares90/TumangaOnlineApi/core/tumangaonline"
 	"github.com/julioolivares90/TumangaOnlineApi/models"
 	"net/http"
 )
 
-func GetInfoLibrary(c *fiber.Ctx) {
+func GetInfoLibrary(c *fiber.Ctx) error {
 	title := c.Query("title")
 	_page := c.Query("_page")
 	orderItem := c.Query("orderItem")
@@ -38,12 +38,12 @@ func GetInfoLibrary(c *fiber.Ctx) {
 			StatusCode: http.StatusBadRequest,
 			Data:       "Ocurrio un error",
 		}
-		c.JSON(response)
+		return c.JSON(response)
 	}
 	response := models.Response{
 		StatusCode: http.StatusOK,
 		Data:       mangas,
 	}
 
-	c.JSON(response)
+	return c.JSON(response)
 }

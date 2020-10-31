@@ -1,19 +1,33 @@
 package main
 
 import (
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 	"github.com/julioolivares90/TumangaOnlineApi/controllers"
 	"os"
 )
+
+type ResponsePath struct {
+}
 
 func main() {
 	startServer()
 }
 func startServer() {
 	app := fiber.New()
-	app.Get("/", func(c *fiber.Ctx) {
+	app.Get("/", func(c *fiber.Ctx) error {
 
-		c.Send("Hello TuMangaOnlineApi")
+		var paths []string
+
+		paths = append(paths, "/api/v1/manga/populares")
+		paths = append(paths, "/api/v1/manga/populares-josei")
+		paths = append(paths, "/api/v1/manga/populares-seinen")
+		paths = append(paths, "/api/v1/manga/info")
+		paths = append(paths, "/api/v1/manga/library")
+		paths = append(paths, "api/v1/manga/listas")
+		paths = append(paths, "api/v1/get-cookies")
+		paths = append(paths, "api/v1/get-manga")
+
+		return c.JSON(paths)
 	})
 
 	app.Get("/api/v1/manga/populares", controllers.GetMangasPopularesWithPagination)
