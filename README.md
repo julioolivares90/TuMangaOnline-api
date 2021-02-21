@@ -18,7 +18,7 @@ go run App.go
 ### Request & Response Ejemplos de uso
 
 ### obtiene todos los mangas populares
-https://tumangaonline-api.herokuapp.com/api/v1/manga/populares
+https://tumangaonline-api.herokuapp.com/api/v1/manga/populares?pageNumber=2
 
 ```json
 {
