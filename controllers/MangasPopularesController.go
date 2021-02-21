@@ -1,16 +1,19 @@
 package controllers
 
 import (
+	"fmt"
+	"net/http"
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/julioolivares90/TumangaOnlineApi/core/tumangaonline"
 	"github.com/julioolivares90/TumangaOnlineApi/models"
-	"net/http"
-	"strconv"
 )
 
 ///GetMangasPopularesWithPagination
 func GetMangasPopularesWithPagination(c *fiber.Ctx) error {
-	param := c.Params("pageNumber")
+	param := c.Query("pageNumber", "0")
+	fmt.Println(param)
 	id, err := strconv.Atoi(param)
 	if err != nil {
 		response := models.Response{
