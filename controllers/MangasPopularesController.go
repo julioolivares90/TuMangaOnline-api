@@ -12,6 +12,7 @@ import (
 
 ///GetMangasPopularesWithPagination
 func GetMangasPopularesWithPagination(c *fiber.Ctx) error {
+
 	param := c.Query("pageNumber", "0")
 	fmt.Println(param)
 	id, err := strconv.Atoi(param)
