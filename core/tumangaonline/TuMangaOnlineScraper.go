@@ -5,12 +5,6 @@ import (
 
 	s "strings"
 
-	"log"
-
-	"context"
-
-	"github.com/chromedp/cdproto/cdp"
-	"github.com/chromedp/chromedp"
 	"github.com/gocolly/colly/v2"
 	"github.com/julioolivares90/TumangaOnlineApi/models"
 	"github.com/julioolivares90/TumangaOnlineApi/utilities"
@@ -77,74 +71,26 @@ func GetMangasPopularesSeinen() []models.MangaTMO {
 	var mangasPopulares []models.MangaTMO
 	url := utilities.TUMANGAONLINE_BASE_URL
 
-	// initializing a chrome instance
-	ctx, cancel := chromedp.NewContext(
-		context.Background(),
-		chromedp.WithLogf(log.Printf),
-	)
-	defer cancel()
+	c := colly.NewCollector()
 
-	// navigate to the target web page and select the HTML elements of interest
-	var nodes []*cdp.Node
-	chromedp.Run(ctx,
-		chromedp.Navigate(url),
-		chromedp.Nodes("body", &nodes, chromedp.ByQueryAll),
-	)
-
-	var url2, image, name, price string
-	for _, node := range nodes {
-
-		chromedp.Run(ctx,
-			chromedp.AttributeValue("a", "href", &url2, nil, chromedp.ByQuery, chromedp.FromNode(node)),
-			chromedp.AttributeValue("img", "src", &image, nil, chromedp.ByQuery, chromedp.FromNode(node)),
-			chromedp.Text("h2", &name, chromedp.ByQuery, chromedp.FromNode(node)),
-			chromedp.Text(".price", &price, chromedp.ByQuery, chromedp.FromNode(node)),
-		)
-	}
-	// Parsea el contenido HTML utilizando goquery
-	/*
-		doc, err := goquery.NewDocumentFromReader(response.Body())
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		var html, err2 = doc.Html()
-		if err2 != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Println(html)
-
-		// Encuentra y extrae los elementos deseados utilizando selectores CSS
-		doc.Find("#app > main > div:nth-child(2) > div.col-12.col-lg-8.col-xl-9 > div:nth-child(1)").Each(func(i int, s *goquery.Selection) {
-			fmt.Println(s.Text())
-		})
-		/*
-			c := colly.NewCollector()
-
-			c.OnHTML("#app > main > div:nth-child(2) > div.col-12.col-lg-8.col-xl-9 > div:nth-child(1)", func(element *colly.HTMLElement) {
-				element.ForEach("div.element", func(i int, element *colly.HTMLElement) {
-					dataItentificador := element.Attr("data-identifier")
-					//fmt.Println(dataItentificador)
-					mangaPopular := models.MangaTMO{
-						Title:       element.ChildText("a > div > div > h4"),
-						MangaUrl:    element.ChildAttr("a", "href"),
-						Type:        element.ChildText("a > div > span.book-type"),
-						Demography:  element.ChildText("a > div > span.demography"),
-						Score:       element.ChildText("a > div > span.score > span"),
-						MangaImagen: getImagenManga(element.ChildText("a > div > style"), dataItentificador),
-					}
-					mangasPopulares = append(mangasPopulares, mangaPopular)
-
-				})
-			})
-
-			err := c.Visit(fmt.Sprintf("%s/populars-boys", url))
-			if err != nil {
-				fmt.Printf("Error => %s", err.Error())
+	c.OnHTML("#app > main > div:nth-child(2) > div.col-12.col-lg-8.col-xl-9 > div:nth-child(1)", func(element *colly.HTMLElement) {
+		element.ForEach("div.element", func(i int, element *colly.HTMLElement) {
+			dataItentificador := element.Attr("data-identifier")
+			//fmt.Println(dataItentificador)
+			mangaPopular := models.MangaTMO{
+				Title:       element.ChildText("a > div > div > h4"),
+				MangaUrl:    element.ChildAttr("a", "href"),
+				Type:        element.ChildText("a > div > span.book-type"),
+				Demography:  element.ChildText("a > div > span.demography"),
+				Score:       element.ChildText("a > div > span.score > span"),
+				MangaImagen: getImagenManga(element.ChildText("a > div > style"), dataItentificador),
 			}
+			mangasPopulares = append(mangasPopulares, mangaPopular)
 
-	*/
+		})
+	})
+	c.Visit(fmt.Sprintf("%s/", url))
+
 	return mangasPopulares
 }
 
