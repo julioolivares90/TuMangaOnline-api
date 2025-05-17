@@ -2,12 +2,13 @@ package tumangaonline
 
 import (
 	"fmt"
-	"github.com/gocolly/colly"
 	"net/http"
 	"strings"
+
+	"github.com/gocolly/colly"
 )
 
-//GetCookiesFromTMO obtiene las cookies de una sesion en la pagina de tmo
+// GetCookiesFromTMO obtiene las cookies de una sesion en la pagina de tmo
 func GetCookiesFromTMO() (map[string]string, error) {
 
 	cookies := make(map[string]string)
@@ -55,23 +56,13 @@ func GetCookiesFromTMO() (map[string]string, error) {
 //exple GetPageFromTMO("https://lectortmo.com/view_uploads/490456")
 
 func getPathFromUrl(url string) string {
-	return strings.Replace(url, "https://lectortmo.com", "", 1)
+	return strings.Replace(url, "https://zonatmo.com", "", 1)
 }
 
 func GetImageChapter2(urlRefer string, url string) ([]string, error) {
 	var imagenes []string
 
 	c := colly.NewCollector()
-
-	c.OnHTML("#app > #main-container", func(element *colly.HTMLElement) {
-		fmt.Println(element.DOM.Text())
-		imagenes = getImagesFromHTMLParsed2(element)
-	})
-	c.OnHTML("#app > #viewer-container", func(element *colly.HTMLElement) {
-		fmt.Println("HTml FOM COLLY", element.Text)
-		imagenes = getImagesFromHTMLParsed2(element)
-		//fmt.Println(element.Text)
-	})
 
 	c.OnRequest(func(request *colly.Request) {
 		path := getPathFromUrl(url)
@@ -80,44 +71,69 @@ func GetImageChapter2(urlRefer string, url string) ([]string, error) {
 		request.Headers.Set("referer", urlRefer)
 		request.Headers.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 		request.Headers.Set("method", "GET")
-		request.Headers.Set("authority", "lectortmo.com")
+		request.Headers.Set("authority", "zonatmo.com")
 
 	})
 
 	c.OnResponse(func(response *colly.Response) {
 		urlVisitated := response.Request.URL.String()
+		fmt.Print(string(response.Body))
 		if strings.Contains(urlVisitated, "/paginated") || strings.Contains(urlVisitated, "/paginated/1") {
 			newUrl := strings.Replace(urlVisitated, "/paginated", "/cascade", 1)
 			if strings.Contains(newUrl, "/cascade/1") {
 				newUrl = strings.Replace(newUrl, "/cascade/1", "/cascade", 1)
 				//imagenes , _ = GetImageChapter2(urlRefer,newUrl)
-				response.Request.Visit(newUrl)
+				imagenes = ScraperNewPage(newUrl, urlVisitated)
 			}
-			response.Request.Visit(newUrl)
+			imagenes = ScraperNewPage(newUrl, urlVisitated)
 
 		} else if strings.Contains(urlVisitated, "/cascade") {
 			response.Request.Visit(urlVisitated)
 		}
 	})
+
+	c.OnError(func(r *colly.Response, err error) {
+		fmt.Errorf(err.Error())
+	})
 	c.Visit(url)
 	return imagenes, nil
+}
+
+func ScraperNewPage(newUrlToScrape string, urlRefered string) []string {
+	var imagenes []string
+	c := colly.NewCollector()
+
+	c.OnHTML("#app > #main-container", func(element *colly.HTMLElement) {
+		fmt.Println(element.DOM.Text())
+		imagenes = getImagesFromHTMLParsed2(element)
+	})
+
+	c.OnRequest(func(request *colly.Request) {
+		path := getPathFromUrl(newUrlToScrape)
+
+		request.Headers.Set("path", path)
+		//request.Headers.Set("referer", urlRefered)
+		request.Headers.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+		request.Headers.Set("method", "GET")
+		request.Headers.Set("authority", "zonatmo.com")
+		//request.Headers.Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36")
+
+	})
+
+	c.Visit(newUrlToScrape)
+	return imagenes
 }
 
 func getImagesFromHTMLParsed2(document *colly.HTMLElement) []string {
 	var images []string
 
-	document.ForEach("#app > #viewer-container", func(i int, element *colly.HTMLElement) {
-		element.ForEach("div.viewer-image-container", func(i int, element *colly.HTMLElement) {
-			image := element.ChildAttr("img", "data-src")
-			fmt.Println(image)
-		})
-	})
+	fmt.Print(document.DOM.Html())
 
-	document.ForEach("#app > #main-container", func(i int, element *colly.HTMLElement) {
-		element.ForEach("div.img-container", func(i int, element *colly.HTMLElement) {
-			image := element.ChildAttr("img", "data-src")
-			fmt.Println(image)
-		})
+	document.ForEach("div.img-container", func(i int, element *colly.HTMLElement) {
+		image := element.ChildAttr("img", "data-src")
+		images = append(images, image)
+		fmt.Println(image)
+
 	})
 
 	fmt.Println(images)

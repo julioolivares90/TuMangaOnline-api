@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+	s "strings"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/julioolivares90/TumangaOnlineApi/core/tumangaonline"
 	"github.com/julioolivares90/TumangaOnlineApi/models"
-	"net/http"
-	s "strings"
 )
 
 func GetInfoManga(c *fiber.Ctx) error {
@@ -71,7 +72,7 @@ func GetPageFromTMOWithCookie(c *fiber.Ctx) error {
 		}
 		return c.JSON(response)
 	}
-	if len(pages) < 0 {
+	if len(pages) <= 0 {
 		response := models.Response{
 			StatusCode: http.StatusBadRequest,
 			Data:       "No se encontraron datos para mostrar",
