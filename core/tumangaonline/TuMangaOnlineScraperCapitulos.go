@@ -77,7 +77,6 @@ func GetImageChapter2(urlRefer string, url string) ([]string, error) {
 
 	c.OnResponse(func(response *colly.Response) {
 		urlVisitated := response.Request.URL.String()
-		fmt.Print(string(response.Body))
 		if strings.Contains(urlVisitated, "/paginated") || strings.Contains(urlVisitated, "/paginated/1") {
 			newUrl := strings.Replace(urlVisitated, "/paginated", "/cascade", 1)
 			if strings.Contains(newUrl, "/cascade/1") {
